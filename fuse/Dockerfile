@@ -1,5 +1,5 @@
 # Use the httpd-parent image as base
-FROM ubi8/openjdk-8:1.10-1
+FROM openjdk:8
 
 COPY camel-ose-springboot-xml-1.0.0-SNAPSHOT.jar /home/jboss
 
