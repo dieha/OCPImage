@@ -1,8 +1,9 @@
 # Use the httpd-parent image as base
 FROM openjdk:8
 
-COPY camel-ose-springboot-xml-1.0.0-SNAPSHOT.jar /home/jboss
+EXPOSE 8080
+
+COPY camel-ose-springboot-xml-1.0.0-SNAPSHOT.jar /usr/src/myapp
+WORKDIR /usr/src/myapp
 
 CMD java -jar camel-ose-springboot-xml-1.0.0-SNAPSHOT.jar
-
-
