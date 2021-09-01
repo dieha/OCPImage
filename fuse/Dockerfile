@@ -3,7 +3,9 @@ FROM openjdk:8u302-jdk
 
 EXPOSE 8080
 
-COPY camel-ose-springboot-xml-1.0.0-SNAPSHOT.jar /usr/src/myapp
-WORKDIR /usr/src/myapp
+USER 0
+RUN mkdir /usr/myapp
 
-CMD tail -f /dev/null
+COPY camel-ose-springboot-xml-1.0.0-SNAPSHOT.jar /usr/myapp
+
+CMD java -jar /usr/myapp/camel-ose-springboot-xml-1.0.0-SNAPSHOT.jar
