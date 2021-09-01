@@ -6,4 +6,4 @@ EXPOSE 8080
 COPY camel-ose-springboot-xml-1.0.0-SNAPSHOT.jar /usr/src/myapp
 WORKDIR /usr/src/myapp
 
-CMD java -jar /usr/src/myapp/camel-ose-springboot-xml-1.0.0-SNAPSHOT.jar
+CMD ["java","-jar","/usr/src/myapp/camel-ose-springboot-xml-1.0.0-SNAPSHOT.jar"]
