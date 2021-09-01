@@ -3,4 +3,7 @@ FROM openjdk:8u302-jdk
 
 EXPOSE 8080
 
-CMD ["bash"]
+COPY camel-ose-springboot-xml-1.0.0-SNAPSHOT.jar /usr/src/myapp
+WORKDIR /usr/src/myapp
+
+CMD tail -f /dev/null
