@@ -6,6 +6,6 @@ EXPOSE 8080
 USER 0
 RUN mkdir /usr/myapp
 
-COPY camel-ose-springboot-xml-1.0.0-SNAPSHOT.jar /usr/myapp
+COPY firstbk-poc-1.0.0.jar /usr/myapp
 
-CMD java -jar /usr/myapp/camel-ose-springboot-xml-1.0.0-SNAPSHOT.jar
+CMD java -jar /usr/myapp/firstbk-poc-1.0.0.jar
