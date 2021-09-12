@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="        http://www.springframework.org/schema/beans https://www.springframework.org/schema/beans/spring-beans.xsd        http://camel.apache.org/schema/spring       https://camel.apache.org/schema/spring/camel-spring.xsd">
+    <camelContext id="camel" xmlns="http://camel.apache.org/schema/spring">
+        <restConfiguration bindingMode="off" component="jetty"
+            enableCORS="true" host="localhost" port="8080"/>
+        <rest id="rest-1" path="/poc">
+            <get id="c95769c8-259d-4611-b35e-814ba4d0a5ee" uri="simple">
+                <to uri="direct:simple"/>
+            </get>
+            <post id="rest-post1" uri="flow">
+                <to uri="direct:flow"/>
+            </post>
+        </rest>
+        <route id="flow">
+            <from id="route-flow" uri="direct:flow"/>
+            <log id="input" message="${body}"/>
+            <to id="_rquest" uri="direct:transRequest"/>
+            <to id="_to7" uri="direct:formatHttpRequest"/>
+            <onException id="rollback">
+                <exception>java.lang.Exception</exception>
+                <to id="_to13" uri="direct:rollback"/>
+                <stop id="_stop1"/>
+            </onException>
+            <setHeader headerName="CamelHttpUri" id="account_url">
+                <simple>${sysenv.POC_SERVICE_URL_EXTERNALSERVICE}/account/execute</simple>
+            </setHeader>
+            <to id="_to1" uri="jetty:http://account"/>
+            <log id="account_Response" message="入扣帳 :${body}"/>
+            <to id="_to8" uri="direct:formatHttpRequest"/>
+            <setHeader headerName="CamelHttpUri" id="journal_url">
+                <simple>${sysenv.POC_SERVICE_URL_EXTERNALSERVICE}/journal/execute</simple>
+            </setHeader>
+            <to id="_to2" uri="jetty:http://journal"/>
+            <log id="journal" message="會計 : ${body}"/>
+            <to id="_to9" uri="direct:formatHttpRequest"/>
+            <setHeader headerName="CamelHttpUri" id="txntCertificate_url">
+                <simple>${sysenv.POC_SERVICE_URL_EXTERNALSERVICE}/txntCertificate/execute</simple>
+            </setHeader>
+            <to id="_to3" uri="jetty:http://url"/>
+            <log id="txntCertificate" message="央行媒體申報 : ${body}"/>
+            <to id="_to10" uri="direct:formatHttpRequest"/>
+            <setHeader headerName="CamelHttpUri" id="largeAmount_url">
+                <simple>${sysenv.POC_SERVICE_URL_EXTERNALSERVICE}/largeAmount/execute</simple>
+            </setHeader>
+            <to id="_to4" uri="jetty:http://url"/>
+            <log id="largeAmount" message="央行額度通報 : txntCertificate${body}"/>
+            <to id="_to11" uri="direct:formatHttpRequest"/>
+            <setHeader headerName="CamelHttpUri" id="nostro_url">
+                <simple>${sysenv.POC_SERVICE_URL_EXTERNALSERVICE}/nostro/execute</simple>
+            </setHeader>
+            <to id="_to5" uri="jetty:http://url"/>
+            <log id="nostro" message="累計資金部位 : ${body}"/>
+            <to id="_to12" uri="direct:formatHttpRequest"/>
+            <setHeader headerName="CamelHttpUri" id="updInward_url">
+                <simple>${sysenv.POC_SERVICE_URL_REMITTANCE}/remittance/updInward</simple>
+            </setHeader>
+            <to id="_to6" uri="jetty:http://url"/>
+            <log id="updInward" message="匯入資料檔 : ${body}"/>
+        </route>
+    </camelContext>
+</beans>
